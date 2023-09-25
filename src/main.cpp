@@ -63,34 +63,58 @@ namespace ludwig
                 u(0, j) = Ue[0] * pow((y[j] / del1[0]),0.5);
         }
 
-        for (u32 j = 1; j < jmax-1; j++)
+        for (u32 j = 1; j < jmax; j++)
              v(0, j) = v(0,j-1) - dy[j-1]*((u(0,j)/Ue[0])*(Ue[1] - Ue[0])/deltax - y[j]/del1[0]*(del1[1]-del1[0])/deltax*(u(0,j) - u(0,j-1) )/dy[j-1]);
 
         for (u32 i = 0; i < imax; i++)
         {
             for (u32 j = 0; j < jmax; j++)
-                std::cout << std::setw(10) << u(i,j) << '\t';
+                std::cout << std::setw(10) << v(i,j) << '\t';
             std::cout << "\n";
         }
 
-        uint32_t cols = 10;
-        uint32_t rows = 10;
 
-        Mat2<f64> A(rows, cols);
-        A(0,1) = 1.0l;
-        for (uint32_t i = 0; i < rows; i++)
+    
+        for (uint32_t i = 0; i < imax-1; i++)
         {
-            for (uint32_t j = 0; j < rows; j++)
-                A(i,j) = 1.1l*(i+j);
+            Mat2<f64> A(jmax-2, jmax-2, 0);
+            std::vector<f64> b(jmax-2, 0);
+            
+            u32 k = 0;
+            for (uint32_t j = 1; j < jmax-1; j++)
+            {
+                f64 alpha = ( viscosity / density ) / u(i,j) * ( deltax / (dy[j-1]*dy[j-1]) );
+                f64 beta  = v(i,j) / u(i,j) * deltax / ( dy[j] + dy[j-1]);
+
+                if ( j == 1)
+                {
+
+                    A(k,k)   = 1.0l + 2.0l * alpha;
+                    A(k,k+1) = -alpha;
+                    b[k]     =  alpha*u(i+1,j-1) + u(i,j) - beta * (u(i,j+1) - u(i,j-1)) + (Ue[i+1]*Ue[i+1] - Ue[i]*Ue[i]) / (2. * u(i,j) );
+
+                } else if (j == jmax-2) {
+                
+                    A(k,k-1) = -alpha;
+                    A(k,k)   = 1.0l + 2.0l * alpha;
+                    b[k]     = alpha*u(i+1,j+1) + u(i,j) - beta * ( u(i,j+1) - u(i,j-1)) + (Ue[i+1]*Ue[i+1] - Ue[i]*Ue[i]) / (2. * u(i,j));
+                } else {
+                    A(k,k-1) = -alpha;
+                    A(k,k)   = 1.0l + 2.0l * alpha;
+                    A(k,k+1) = -alpha;
+                    b[k]     = u(i,j) - beta * ( u(i,j+1) - u(i,j-1) ) + (Ue[i+1]*Ue[i+1] - Ue[i]*Ue[i]) / (2. * u(i,j));
+                }
+                k++;    
+            }
+            for (uint32_t i = 0; i < imax; i++)
+            {
+                for (uint32_t j = 0; j < jmax; j++)
+                    std::cout << std::setprecision(8) << A(i,j) << "\t";
+
+                std::cout << std::endl;
+            }
         }
         
-        for (uint32_t i = 0; i < rows; i++)
-        {
-            for (uint32_t j = 0; j < rows; j++)
-                std::cout << A(i,j) << "\t";
-
-            std::cout << std::endl;
-        }
 
     }
 }
