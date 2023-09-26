@@ -14,6 +14,39 @@ namespace ludwig
     typedef float    f32;
 
     template<typename T>
+    struct Mat1
+    {
+        T* data;
+        u32 size;
+
+        Mat1(u32 s) : size(s)
+        {
+            data = new T[size];
+        }
+
+        Mat1(u32 s, T init) : size(s)
+        {
+            data = new T[size];
+
+            for (int i = 0; i < size; i++)
+                data[i] = init;
+        }
+        ~Mat1()
+        {
+            delete[] data;
+        }
+        
+        T& operator() (const u32 i)
+        {
+            return data[i];
+        }
+        const T& operator() (const u32 i) const
+        {
+            return data[i];
+        }
+    };
+
+    template<typename T>
     struct Mat2
     {
         T*  data;
@@ -40,8 +73,12 @@ namespace ludwig
         {
             delete[] data;
         }
-
+        
         T& operator() (const u32 i, const u32 j)
+        {
+            return data[i + j * rows];
+        }
+        const T& operator() (const u32 i, const u32 j) const
         {
             return data[i + j * rows];
         }

@@ -3,7 +3,7 @@
 #include "ludwig/core/types.h"
 #include "ludwig/core/linspace.h"
 #include "ludwig/mesh/uniform-grid.h"
-
+#include "ludwig/solver/tdma.h"
 
 namespace ludwig
 {
@@ -73,12 +73,12 @@ namespace ludwig
             std::cout << "\n";
         }
 
-
-    
         for (uint32_t i = 0; i < imax-1; i++)
         {
             Mat2<f64> A(jmax-2, jmax-2, 0);
-            std::vector<f64> b(jmax-2, 0);
+            Mat1<f64> b(jmax-2, 0);
+            Mat1<f64> c(jmax-2, 0);
+
             
             u32 k = 0;
             for (uint32_t j = 1; j < jmax-1; j++)
@@ -88,24 +88,30 @@ namespace ludwig
 
                 if ( j == 1)
                 {
-
                     A(k,k)   = 1.0l + 2.0l * alpha;
                     A(k,k+1) = -alpha;
-                    b[k]     =  alpha*u(i+1,j-1) + u(i,j) - beta * (u(i,j+1) - u(i,j-1)) + (Ue[i+1]*Ue[i+1] - Ue[i]*Ue[i]) / (2. * u(i,j) );
-
+                    b(k)     =  alpha*u(i+1,j-1) + u(i,j) - beta * (u(i,j+1) - u(i,j-1)) + (Ue[i+1]*Ue[i+1] - Ue[i]*Ue[i]) / (2. * u(i,j) );
                 } else if (j == jmax-2) {
-                
                     A(k,k-1) = -alpha;
                     A(k,k)   = 1.0l + 2.0l * alpha;
-                    b[k]     = alpha*u(i+1,j+1) + u(i,j) - beta * ( u(i,j+1) - u(i,j-1)) + (Ue[i+1]*Ue[i+1] - Ue[i]*Ue[i]) / (2. * u(i,j));
+                    b(k)     = alpha*u(i+1,j+1) + u(i,j) - beta * ( u(i,j+1) - u(i,j-1)) + (Ue[i+1]*Ue[i+1] - Ue[i]*Ue[i]) / (2. * u(i,j));
                 } else {
                     A(k,k-1) = -alpha;
                     A(k,k)   = 1.0l + 2.0l * alpha;
                     A(k,k+1) = -alpha;
-                    b[k]     = u(i,j) - beta * ( u(i,j+1) - u(i,j-1) ) + (Ue[i+1]*Ue[i+1] - Ue[i]*Ue[i]) / (2. * u(i,j));
+                    b(k)     = u(i,j) - beta * ( u(i,j+1) - u(i,j-1) ) + (Ue[i+1]*Ue[i+1] - Ue[i]*Ue[i]) / (2. * u(i,j));
                 }
-                k++;    
+                k++;
             }
+            SolveTDMA<f64>(A, b, c);
+            
+            // TODO(chris): replace detlay with dy[index] and double check the appropriate index to be used
+            for (u32 j=0; j < jmax-2; j++)
+            {
+                u(i+1, j+1) = c(j);
+                v(i+1, j+1) = v(i+1, j) - deltay / (2.0l*deltax) * ( u(i+1, j+1) - u(i+1, j+1) + u(i+1, j) - u(i, j) );
+            }
+
             for (uint32_t i = 0; i < imax; i++)
             {
                 for (uint32_t j = 0; j < jmax; j++)
