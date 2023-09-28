@@ -1,9 +1,15 @@
 #include <iostream>
 #include <iomanip>
-#include "ludwig/core/types.h"
+#include <chrono>
+#include <functional>
+
+#include "ludwig/core/assert.h"
+#include "ludwig/types/types.h"
 #include "ludwig/core/linspace.h"
 #include "ludwig/mesh/uniform-grid.h"
 #include "ludwig/solver/tdma.h"
+
+#include "tests/test-matrix.h"
 
 namespace ludwig
 {
@@ -39,8 +45,8 @@ namespace ludwig
     
         std::cout << ymax <<std::endl;
 
-        Mat2<f64> u(imax, jmax, 0.0l);
-        Mat2<f64> v(imax, jmax, 0.0l);
+        Matrix<f64> u(imax, jmax, 0.0l);
+        Matrix<f64> v(imax, jmax, 0.0l);
         
         std::vector<f64> Ue(imax);
         std::vector<f64> Re(imax);
@@ -75,11 +81,10 @@ namespace ludwig
 
         for (uint32_t i = 0; i < imax-1; i++)
         {
-            Mat2<f64> A(jmax-2, jmax-2, 0);
-            Mat1<f64> b(jmax-2, 0);
-            Mat1<f64> c(jmax-2, 0);
+            Matrix<f64> A(jmax-2, jmax-2);
+            Matrix<f64> b(jmax-2, 1);
+            Matrix<f64> c(jmax-2, 1);
 
-            
             u32 k = 0;
             for (uint32_t j = 1; j < jmax-1; j++)
             {
@@ -123,13 +128,35 @@ namespace ludwig
         
 
     }
+
+    void test_arrays()
+    {
+        std::cout << "========= Array ===========\n"; 
+        u32* shape = new u32[2];
+        shape[0] = 2;
+        shape[1] = 2;
+        Array<f64, 2> A(shape);
+        for (int i = 0; i < A.size; i++)
+            std::cout << A.data[i] << std::endl;
+    }
 }
 
+template<typename T>
+auto timeit(size_t iterations, std::function<void()> func)
+{
+    auto start = std::chrono::high_resolution_clock::now();
+
+    for (size_t i = 0; i < iterations; i++)
+        func();
+    auto stop  = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration_cast<T>(stop - start) / iterations;
+}
 
 int main(int argc, char** argv)
 {
-    ludwig::run();
-    
+    ASSERT(false,"test assert");
+    ludwig::test_matrix_all();
+    //ludwig::run();
     return 0;
 }
 

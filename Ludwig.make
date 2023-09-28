@@ -106,9 +106,9 @@ endif
 clean:
 	@echo Cleaning ludwig
 ifeq (posix,$(SHELLTYPE))
-	$(SILENT) rm -fo  $(TARGET)
-	$(SILENT) rm -rfo $(GENERATED)
-	$(SILENT) rm -rfo $(OBJDIR)
+	$(SILENT) rm -f  $(TARGET)
+	$(SILENT) rm -rf $(GENERATED)
+	$(SILENT) rm -rf $(OBJDIR)
 else
 	$(SILENT) if exist $(subst /,\\,$(TARGET)) del $(subst /,\\,$(TARGET))
 	$(SILENT) if exist $(subst /,\\,$(GENERATED)) del /s /q $(subst /,\\,$(GENERATED))

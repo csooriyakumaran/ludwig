@@ -1,10 +1,10 @@
-#include "../core/types.h"
+#include "../types/types.h"
 
 namespace ludwig
 {
     // TODO(chris): change indexing for maxtrix to use [i,j] instead of (i,j) to maintain consistency with std::vector
     template<typename T>
-    void SolveTDMA(Mat2<T> A, Mat1<T> b, Mat1<T>& x)
+    void SolveTDMA(Matrix<T> A, Matrix<T> b, Matrix<T>& x)
     {
         uint32_t m = b.size;
         
