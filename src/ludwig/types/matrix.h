@@ -1,4 +1,5 @@
 #pragma once
+#include <stdexcept>
 #include "primitive.h"
 
 #include <cstring>
@@ -152,25 +153,6 @@ namespace ludwig
             return  *this;
         }
 
-        // NOTE(Chris): currently this just masks out the specified column/row to 
-        //              yeild the submatrix appropriate for finding the determanent
-        Matrix<T> SubMatrix(u32 d1, u32 d2)
-        {   
-            Matrix<T> subMatrix(dim1-1, dim2-1);
-            u32 count = 0;
-            for (u32 j = 0; j < dim2; j++)
-            {
-                for (u32 i = 0; i < dim1; i++)
-                {
-                    if ( (i != d1) && (j  != d2))
-                    {
-                        subMatrix.data[count] = data[i + j * dim1];
-                        count++;
-                    }
-                }
-            }
-            return subMatrix;
-        }
 
         template<typename U> friend Matrix<U> operator+ (const Matrix<U>& lhs, const Matrix<U>& rhs);
         template<typename U> friend Matrix<U> operator+ (const Matrix<U>& lhs, const U& rhs);
@@ -237,11 +219,14 @@ namespace ludwig
     template<typename T>
     Matrix<T> operator* (const Matrix<T>& lhs, const Matrix<T>& rhs)
     {
+        if ( (lhs.dim1 != rhs.dim2) || (lhs.dim2 != rhs.dim1))
+            throw std::invalid_argument("cannot multiply matrices of these dimensions");
+
         Matrix<T> res(lhs.dim1, rhs.dim2);
-        
+
         for (u32 i = 0; i < lhs.dim1; i++)
-            for (u32 j = 0; j < rhs.di1; j++)
-                for (u32 k = 0; k < lhs.dim2; k++)
+            for (u32 j = 0; j < rhs.dim2; j++)
+                for (u32 k = 0; k < rhs.dim1; k++)
                     res(i,j) += lhs(i,k) * rhs(k,j);
         return res;
     }
@@ -262,8 +247,29 @@ namespace ludwig
         return res;
     }
 
+    // NOTE(Chris): currently this just masks out the specified column/row to 
+    //              yeild the submatrix appropriate for finding the determanent
     template<typename T>
-    T Determinant(const Matrix<T> matrix)
+    Matrix<T> SubMatrix(const Matrix<T>& matrix, u32 d1, u32 d2)
+    {   
+        Matrix<T> subMatrix(matrix.dim1-1, matrix.dim2-1);
+        u32 count = 0;
+        for (u32 j = 0; j < matrix.dim2; j++)
+        {
+            for (u32 i = 0; i < matrix.dim1; i++)
+            {
+                if ( (i != d1) && (j  != d2))
+                {
+                    subMatrix.data[count] = matrix(i,j);
+                    count++;
+                }
+            }
+        }
+        return subMatrix;
+    }
+
+    template<typename T>
+    T Determinant(const Matrix<T>& matrix)
     {
         if ( matrix.dim1 != matrix.dim2)
             throw std::invalid_argument("Cannot compute the determinant of a matrix that is not square.");
@@ -276,12 +282,13 @@ namespace ludwig
         
         for (u32 j = 0; j < matrix.dim2; j++)
         {
-            Matrix<T> subMatrix = matrix.SubMatrix(0,j);
+            Matrix<T> subMatrix = SubMatrix(matrix, 0, j);
             determinant += matrix(0,j) * Determinant<T>(subMatrix) * sign;
             sign *= -1;
         }
         
         return determinant;
     }
+
 
 }

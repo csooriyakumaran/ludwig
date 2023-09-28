@@ -91,51 +91,120 @@ namespace ludwig
 
     static void test_matrix_arithmatic()
     {
-        // Equality
-        std::cout << "========= Matrix A == Matrix B =======================\n"; 
-        std::cout << " >> Matrix<f64> A(2,3,1.0l);\n";
-        std::cout << " >> Matrix<f64> B(2,3,1.0l);\n";
-        std::cout << " >> Matrix<f64> C(3,2,1.0l);\n";
-        std::cout << " >> Matrix<f64> D(2,2,2.0l);\n";
-        Matrix<f64> A(2,3,1.0l);
-        Matrix<f64> B(2,3,1.0l);
-        Matrix<f64> C(3,2,1.0l);
-        Matrix<f64> D(2,2,2.0l);
-        std::cout << " A == B : (expect 1) " << (A == B) << std::endl; 
-        std::cout << " B == A : (expect 1) " << (B == A) << std::endl; 
-        std::cout << " A == C : (expect 0) " << (A == C) << std::endl; 
-        std::cout << memcmp(A.data, C.data, A.size*sizeof(*A.data)) <<std::endl;
-        std::cout << " A == D : (expect 0) " << (A == D) << std::endl; 
-        std::cout << " D == A : (expect 0) " << (D == A) << std::endl; 
+        {
+            // Equality
+            std::cout << "========= Matrix A == Matrix B ===================\n"; 
+            std::cout << " >> Matrix<f64> A(2,3,1.0l);\n";
+            std::cout << " >> Matrix<f64> B(2,3,1.0l);\n";
+            std::cout << " >> Matrix<f64> C(3,2,1.0l);\n";
+            std::cout << " >> Matrix<f64> D(2,2,2.0l);\n";
+            Matrix<f64> A(2,3,1.0l);
+            Matrix<f64> B(2,3,1.0l);
+            Matrix<f64> C(3,2,1.0l);
+            Matrix<f64> D(2,2,2.0l);
+            std::cout << " A == B : (expect 1) " << (A == B) << std::endl; 
+            std::cout << " B == A : (expect 1) " << (B == A) << std::endl; 
+            std::cout << " A == C : (expect 0) " << (A == C) << std::endl; 
+            std::cout << " A == D : (expect 0) " << (A == D) << std::endl; 
+            std::cout << " D == A : (expect 0) " << (D == A) << std::endl; 
+        }
 
-        std::cout << "========= Matrix A + C ===============================\n"; 
-        std::cout << " --- A --- \n";
-        print_matrix(A);
-        std::cout << " >> Matrix<f64> F = A + 5.0;\n";
-        Matrix<f64> F = A + 5.0;
-        std::cout << " --- A --- \n";
-        print_matrix(A);
-        std::cout << " --- F --- \n";
-        print_matrix(F);
-        std::cout << " >> A += 5.0;\n";
-        A += 5.0;
-        print_matrix(A);
+        {
+            std::cout << "========= Matrix A + scalar ======================\n"; 
+
+            std::cout << " >> f64 data[6] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};\n";
+            std::cout << " >> Matrix<f64> A(2,3,data);\n";
+            f64 data[6] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+            Matrix<f64> A(2,3,data);
+            std::cout << " --- A --- \n";
+            print_matrix(A);
+
+            std::cout << " >> Matrix<f64> B = A + 5.0;\n";
+            Matrix<f64> B = A + 5.0;
+            std::cout << " --- A --- \n";
+            print_matrix(A);
+            std::cout << " --- B --- \n";
+            print_matrix(B);
+
+            std::cout << " >> Matrix<f64> C = 5.0 + A;\n";
+            Matrix<f64> C = 5.0 + A;
+            std::cout << " --- A --- \n";
+            print_matrix(A);
+            std::cout << " --- C --- \n";
+            print_matrix(C);
+            std::cout << " >> A += 5.0;\n";
+            A += 5.0;
+            print_matrix(A);
+        }
     
-        std::cout << "========= Matrix A + Matrix B =======================\n"; 
-        std::cout << " --- A --- \n";
-        print_matrix(A);
-        std::cout << " --- B --- \n";
-        print_matrix(B);
-        std::cout << " >> Matrix<f64> E = A + B;\n";
-        Matrix<f64> E = A + B;
-        std::cout << " --- A --- \n";
-        print_matrix(A);
-        std::cout << " --- E --- \n";
-        print_matrix(E);
-        std::cout << " >> A += E;\n";
-        A += E;
-        print_matrix(A);
+        {
+            std::cout << "========= Matrix A + Matrix B =======================\n"; 
 
+            std::cout << " >> f64 dataA[6] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};\n";
+            std::cout << " >> f64 dataB[7] = {1.0, 3.0, 5.0, 7.0, 9.0, 11.0};\n";
+            std::cout << " >> Matrix<f64> A(2,3,dataA);\n";
+            std::cout << " >> Matrix<f64> B(2,3,dataB);\n";
+            f64 dataA[6] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+            f64 dataB[7] = {1.0, 3.0, 5.0, 7.0, 9.0, 11.0};
+            Matrix<f64>  A(2, 3, dataA);
+            Matrix<f64>  B(2, 3, dataB);
+
+            std::cout << " --- A --- \n";
+            print_matrix(A);
+            std::cout << " --- B --- \n";
+            print_matrix(B);
+        
+            std::cout << " >> Matrix<f64> C = A + B;\n";
+            Matrix<f64> C = A + B;
+            std::cout << " --- A --- \n";
+            print_matrix(A);
+            std::cout << " --- C --- \n";
+            print_matrix(C);
+            std::cout << " >> A += C;\n";
+            A += C;
+            print_matrix(A);
+        }
+        {
+            std::cout << "========= Matrix A x Matrix B =======================\n"; 
+            std::cout << " >> f64 dataA[6] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};\n";
+            std::cout << " >> f64 dataB[7] = {1.0, 3.0, 5.0, 7.0, 9.0, 11.0};\n";
+            std::cout << " >> Matrix<f64> A(2,3,dataA);\n";
+            std::cout << " >> Matrix<f64> B(3,2,dataB);\n";
+            f64 dataA[6] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
+            f64 dataB[7] = {1.0, 3.0, 5.0, 7.0, 9.0, 11.0};
+            Matrix<f64>  A(2, 3, dataA);
+            Matrix<f64>  B(3, 2, dataB);
+
+            std::cout << " --- A --- \n";
+            print_matrix(A);
+            std::cout << " --- B --- \n";
+            print_matrix(B);
+
+            std::cout << " >> Matrix<f64> C = A * B;\n";
+            Matrix<f64> C = A * B;
+            std::cout << " --- A --- \n";
+            print_matrix(A);
+            std::cout << " --- C --- \n";
+            print_matrix(C);
+        
+            std::cout << " >> Matrix<f64> D = B * A;\n";
+            Matrix<f64> D = B * A; 
+            std::cout << " --- D --- \n";
+            print_matrix(D);
+
+            std::cout << " >> Matrix<f64> D *= 0.5;\n";
+            D *= 0.5; 
+            std::cout << " --- D --- \n";
+            print_matrix(D);
+        }
+        {
+            std::cout << "========= |Matrix A| =============================\n"; 
+            f64 data[9] = {2.0, 1.0, 0.0, 1.0, 0.0, 3.0, 1.0, 1.0, 1.0};
+            Matrix<f64> A(3,3,data);
+            print_matrix(A);
+            f64 d = Determinant(A);
+            std::cout << " |A| = " << d << std::endl;
+        }
     }
 
     static void test_matrix_all()

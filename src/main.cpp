@@ -154,7 +154,7 @@ auto timeit(size_t iterations, std::function<void()> func)
 
 int main(int argc, char** argv)
 {
-    ASSERT(false,"test assert");
+    ASSERT(true,"test assert");
     ludwig::test_matrix_all();
     //ludwig::run();
     return 0;
