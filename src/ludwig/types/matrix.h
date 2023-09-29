@@ -219,8 +219,7 @@ namespace ludwig
     template<typename T>
     Matrix<T> operator* (const Matrix<T>& lhs, const Matrix<T>& rhs)
     {
-        if ( (lhs.dim1 != rhs.dim2) || (lhs.dim2 != rhs.dim1))
-            throw std::invalid_argument("cannot multiply matrices of these dimensions");
+        ASSERT( (lhs.dim1 == rhs.dim2) || (lhs.dim2 == rhs.dim1),"cannot multiply %d x %d matrix with %d x %d\n", lhs.dim1, lhs.dim2, rhs.dim1, rhs.dim2);
 
         Matrix<T> res(lhs.dim1, rhs.dim2);
 
@@ -271,8 +270,7 @@ namespace ludwig
     template<typename T>
     T Determinant(const Matrix<T>& matrix)
     {
-        if ( matrix.dim1 != matrix.dim2)
-            throw std::invalid_argument("Cannot compute the determinant of a matrix that is not square.");
+        ASSERT( ( matrix.dim1 == matrix.dim2), "%d x %d matrix is not square - Cannot compute determinant!\n", matrix.dim1, matrix.dim2);
         
         if ( matrix.dim1 == 2)
             return matrix(0,0) * matrix(1,1) - matrix(0,1) * matrix(1,0);
@@ -290,5 +288,45 @@ namespace ludwig
         return determinant;
     }
 
+    template<typename T>
+    Matrix<T> Inverse(const Matrix<T>& matrix)
+    {
+        
 
+    }
+    
+    template<typename T>
+    bool Compare (const Matrix<T>& lhs, const Matrix<T>& rhs, f64 tolerance)
+    {
+
+        return true;
+
+    }
+    
+    template<typename T>
+    Matrix<T> IdentityMatrix(u32 dim)
+    {
+    
+        Matrix<T> matrix(dim, dim);
+        for (u32 i = 0; i < dim; i++)
+            for (u32 j = 0; j < dim; j++)
+                if ( i == j )
+                    matrix(i,j) = 1.0;
+        return matrix;
+    }
+
+    template<typename T>
+    Matrix<T> IdentityMatrix(Matrix<T>& matrix)
+    {
+        ASSERT( (matrix.dim1 == matrix.dim2), "Cannot convert a %d x %d matrix to the Identity - It is not square!\n", matrix.dim1, matrix.dim2);
+
+
+        memset(matrix.data, 0, matrix.size*sizeof(*matrix.data));
+    
+        for (u32 i = 0; i < matrix.dim1; i++)
+            for (u32 j = 0; j < matrix.dim2; j++)
+                if ( i == j )
+                    matrix(i,j) = 1.0;
+        return matrix;
+    }
 }

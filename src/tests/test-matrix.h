@@ -16,14 +16,14 @@ namespace ludwig
         {
             std::cout << "dim1: " << i << " |";
             for (u32 j = 0; j < m.dim2; j++)
-                std::cout << std::setw(8) << std::setprecision(3) << m(i,j);
+                std::cout << std::fixed << std::setw(8) << std::setprecision(3) << m(i,j);
             std::cout << std::endl;
         } 
 
         std::cout << std::endl;
         std::cout << "Memory Layout: ";
         for (u64 i = 0; i < m.size; i++)
-            std::cout << std::setw(8) << m[i];
+            std::cout << std::fixed << std::setprecision(3) << std::setw(8) << m[i];
         std::cout << std::endl;
         std::cout << std::endl;
 
@@ -198,21 +198,33 @@ namespace ludwig
             print_matrix(D);
         }
         {
-            std::cout << "========= |Matrix A| =============================\n"; 
+            std::cout << "========= Identity Matrix: I=======================\n"; 
+            Matrix<f64> I3 = IdentityMatrix<f64>(3);
+            print_matrix(I3);
+            Matrix<f64> I5 = IdentityMatrix<f64>(5);
+            print_matrix(I5);
             f64 data[9] = {2.0, 1.0, 0.0, 1.0, 0.0, 3.0, 1.0, 1.0, 1.0};
             Matrix<f64> A(3,3,data);
+            A = IdentityMatrix<f64>(A);
             print_matrix(A);
-            f64 d = Determinant(A);
-            std::cout << " |A| = " << d << std::endl;
         }
+    }
+    static void test_matrix_determinant()
+    {
+        std::cout << "========= |Matrix A| =============================\n"; 
+        f64 data[9] = {2.0, 1.0, 0.0, 1.0, 0.0, 3.0, 1.0, 1.0, 1.0};
+        Matrix<f64> A(3,3,data);
+        print_matrix(A);
+        f64 d = Determinant(A);
+        std::cout << " |A| = " << d << std::endl;
     }
 
     static void test_matrix_all()
     {
         test_matrix_construction();
         test_matrix_arithmatic();
+        test_matrix_determinant();
         // test_matrix_submatrix();
         // test_matrix_inverse();
-        // test_matrix_determinant();
     }
 }

@@ -9,7 +9,9 @@
 #include "ludwig/mesh/uniform-grid.h"
 #include "ludwig/solver/tdma.h"
 
-#include "tests/test-matrix.h"
+#ifdef DEBUG
+    #include "tests/test-matrix.h"
+#endif
 
 namespace ludwig
 {
@@ -154,8 +156,9 @@ auto timeit(size_t iterations, std::function<void()> func)
 
 int main(int argc, char** argv)
 {
-    ASSERT(true,"test assert");
+#ifdef DEBUG
     ludwig::test_matrix_all();
+#endif
     //ludwig::run();
     return 0;
 }
