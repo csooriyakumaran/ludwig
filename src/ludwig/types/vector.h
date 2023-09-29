@@ -90,14 +90,16 @@ namespace ludwig
         Vector<T>& operator-= (const Vector<T>& rhs);
     
         template<typename U> friend Vector<U> operator+ (const U& lhs, const Vector<U>& rhs);
-        template<typename U> friend Vector<U> operator+ (const Vector<U>& lhs, const U& rhs);
-        template<typename U> friend Vector<U> operator+ (const Vector<U>& lhs, const Vector<U>& rhs);
         template<typename U> friend Vector<U> operator- (const U& lhs, const Vector<U>& rhs);
-        template<typename U> friend Vector<U> operator- (const Vector<U>& lhs, const U& rhs);
-        template<typename U> friend Vector<U> operator- (const Vector<U>& lhs, const Vector<U>& rhs);
         template<typename U> friend Vector<U> operator* (const U& lhs, const Vector<U>& rhs);
-        template<typename U> friend Vector<U> operator* (const Vector<U>& lhs, const U& rhs);
-        template<typename U> friend Vector<U> operator* (const Vector<U>& lhs, const Vector<U>& rhs);
+
+        static T& dot(const Vector<T>& lhs, const Vector<T>& rhs);
+        static Vector<T>& cross(const Vector<T>& lhs, const Vector<T>& rhs); // only if n = 3;
+        
+        const T& magnitude();
+        void normalize(); // 1/mag * Vector
+        Vector<T>& normalize();
+        
     };
 
 
