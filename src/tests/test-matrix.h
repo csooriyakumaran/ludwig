@@ -86,7 +86,18 @@ namespace ludwig
         std::cout << " >> Mcopy = M2x2c;\n";
         Mcopy = M2x2c;
         print_matrix(Mcopy);
-
+        {
+            // Matrix Move
+            std::cout << "========= Matrix(Matrix&& other) ===========\n"; 
+            std::cout << " >> f64 data[9] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};\n";
+            std::cout << " >> Matrix<f64> A(3,3,data);\n";
+            f64 data[9] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
+            Matrix<f64> A(3,3,data);
+            print_matrix(A);
+            Matrix<f64> B = std::move(A);
+            print_matrix(A);
+            print_matrix(B);
+        }
     }
 
     static void test_matrix_arithmatic()
@@ -98,15 +109,21 @@ namespace ludwig
             std::cout << " >> Matrix<f64> B(2,3,1.0l);\n";
             std::cout << " >> Matrix<f64> C(3,2,1.0l);\n";
             std::cout << " >> Matrix<f64> D(2,2,2.0l);\n";
+            std::cout << " >> Matrix<f64> E(2,2,0.0l);\n";
             Matrix<f64> A(2,3,1.0l);
             Matrix<f64> B(2,3,1.0l);
             Matrix<f64> C(3,2,1.0l);
             Matrix<f64> D(2,2,2.0l);
+            Matrix<f64> E(2,2,0.0l);
             std::cout << " A == B : (expect 1) " << (A == B) << std::endl; 
             std::cout << " B == A : (expect 1) " << (B == A) << std::endl; 
             std::cout << " A == C : (expect 0) " << (A == C) << std::endl; 
             std::cout << " A == D : (expect 0) " << (A == D) << std::endl; 
             std::cout << " D == A : (expect 0) " << (D == A) << std::endl; 
+            std::cout << " A == 0 : (expect 0) " << (A == 0) << std::endl; 
+            std::cout << " A == 1 : (expect 0) " << (A == 1) << std::endl; 
+            std::cout << " E == 0 : (expect 1) " << (E == 0) << std::endl; 
+            std::cout << " E == 1 : (expect 0) " << (E == 1) << std::endl; 
         }
 
         {

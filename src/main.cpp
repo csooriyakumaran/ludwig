@@ -88,7 +88,7 @@ namespace ludwig
             Matrix<f64> c(jmax-2, 1);
 
             u32 k = 0;
-            for (uint32_t j = 1; j < jmax-1; j++)
+            for (u32 j = 1; j < jmax-1; j++)
             {
                 f64 alpha = ( viscosity / density ) / u(i,j) * ( deltax / (dy[j-1]*dy[j-1]) );
                 f64 beta  = v(i,j) / u(i,j) * deltax / ( dy[j] + dy[j-1]);
@@ -110,7 +110,7 @@ namespace ludwig
                 }
                 k++;
             }
-            SolveTDMA<f64>(A, b, c);
+             solve::TDMA<f64>(A, b, c);
             
             // TODO(chris): replace detlay with dy[index] and double check the appropriate index to be used
             for (u32 j=0; j < jmax-2; j++)
@@ -119,9 +119,9 @@ namespace ludwig
                 v(i+1, j+1) = v(i+1, j) - deltay / (2.0l*deltax) * ( u(i+1, j+1) - u(i+1, j+1) + u(i+1, j) - u(i, j) );
             }
 
-            for (uint32_t i = 0; i < imax; i++)
+            for (uint32_t i = 0; i < jmax-2; i++)
             {
-                for (uint32_t j = 0; j < jmax; j++)
+                for (uint32_t j = 0; j < jmax-2; j++)
                     std::cout << std::setprecision(8) << A(i,j) << "\t";
 
                 std::cout << std::endl;
@@ -156,10 +156,14 @@ auto timeit(size_t iterations, std::function<void()> func)
 
 int main(int argc, char** argv)
 {
+
+    // auto dur = timeit<std::chrono::nanoseconds>(1, []() { ludwig::Matrix<ludwig::f64>  A(100000, 10000, 1.23455); ludwig::f64 B = A[1000]; });
+    // std::cout << dur << "\n";
+
 #ifdef DEBUG
     ludwig::test_matrix_all();
 #endif
-    //ludwig::run();
+    ludwig::run();
     return 0;
 }
 
