@@ -9,14 +9,14 @@
 //   rules. Matrix1 is a single column matrix (i.e., it is an algebreaic 
 //   vector, which is not the same as a vector from above)
 //
-//  rows / cols    j = 0,       1,           2,         ..., dim2
-//  i = 0              0     dim1 + 0    2*dim1 + 0
-//      1              1     dim1 + 1    2*dim1 + 1
-//      2              2
-//      3              3
-//      4              4
-//      ...            ...
-//      dim1           dim1  dim1+dim1     3* dim1
+//  rows / cols    j = 0,        1,           2,         ...,    dim2
+//  i = 0              0,        1,           2,         ...,    dim2
+//      1       dim2 + 0, dim2 + 1,    dim2 + 2,         ..., 2x dim2
+//      2    2x dim2 + 0, ... 
+//      3                       ...
+//      4                           ...
+//      ...                             ... 
+//      dim1                                              dim1 x dim2
 //
 // ============================================================================
 namespace ludwig
@@ -86,13 +86,13 @@ namespace ludwig
         // two-dimensional indexed access (read/write)
         T& operator() (const u32 i, const u32 j = 0)
         {
-            return data[i + j * dim1];
+            return data[j + i * dim2];
         }
 
         // two-dimensional indexed access (read)
         const T& operator() (const u32 i, const u32 j = 0) const
         {
-            return data[i + j * dim1];
+            return data[j + i * dim2];
         }
         
         Matrix<T>& operator= (const Matrix<T> rhs)
@@ -253,9 +253,9 @@ namespace ludwig
     {   
         Matrix<T> subMatrix(matrix.dim1-1, matrix.dim2-1);
         u32 count = 0;
-        for (u32 j = 0; j < matrix.dim2; j++)
+        for (u32 i = 0; i < matrix.dim1; i++)
         {
-            for (u32 i = 0; i < matrix.dim1; i++)
+            for (u32 j = 0; j < matrix.dim2; j++)
             {
                 if ( (i != d1) && (j  != d2))
                 {

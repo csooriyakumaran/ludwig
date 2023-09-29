@@ -212,7 +212,11 @@ namespace ludwig
     static void test_matrix_determinant()
     {
         std::cout << "========= |Matrix A| =============================\n"; 
-        f64 data[9] = {2.0, 1.0, 0.0, 1.0, 0.0, 3.0, 1.0, 1.0, 1.0};
+        f64 data[9] = {
+            2.0, 1.0, 1.0,
+            1.0, 0.0, 1.0, 
+            0.0, 3.0, 1.0
+        };
         Matrix<f64> A(3,3,data);
         print_matrix(A);
         f64 d = Determinant(A);
