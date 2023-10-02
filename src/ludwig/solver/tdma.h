@@ -2,15 +2,11 @@
 
 namespace ludwig::solve
 {
-    // TODO(chris): change indexing for maxtrix to use [i,j] instead of (i,j) to maintain consistency with std::vector
     template<typename T>
-    void TDMA(Matrix<T> A, Matrix<T> b, Matrix<T>& x)
+    void TDMA(Matrix<T> A, Vector<T> b, Vector<T>& x)
     {
         uint32_t m = b.size;
         
-        std::cout << b.size << std::endl;
-        std::cout << x.size << std::endl;
-
         // first row coefficients
         A(0,1) = A(0, 1) / A(0,0);
         b(0)   = b(0) / A(0,0);

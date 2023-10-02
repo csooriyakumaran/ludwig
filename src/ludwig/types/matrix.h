@@ -1,8 +1,7 @@
 #pragma once
-#include <stdexcept>
-#include "primitive.h"
-
 #include <cstring>
+#include "primitive.h"
+#include "vector.h"
 
 // =========================== MATRICES =======================================
 // - these are algebreaic matrices which follow typical matrix arithematic 
@@ -360,6 +359,18 @@ namespace ludwig
         return res;
     }
 
+    template<typename T>
+    Vector<T> operator* (const Matrix<T>& lhs, const Vector<T>& rhs)
+    {
+        ASSERT( (lhs.dim2 == rhs.size), "cannot multiply %d x %d matrix with %d x 1\n", lhs.dim1, lhs.dim2, rhs.size);
+
+        Vector<T> res(lhs.dim1);
+
+        for (u32 i = 0; i < lhs.dim1; i++)
+            for (u32 j = 0; j < lhs.dim2; j++)
+                res(i) += lhs(i,j) * rhs(j);
+        return res;
+    }
     // ====================================================================== //
     // Matrix operations 
     // ====================================================================== //

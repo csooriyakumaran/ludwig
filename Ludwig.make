@@ -19,11 +19,11 @@ endif
 # #############################################
 
 RESCOMP = windres
-INCLUDES += -Isrc
+INCLUDES += -Isrc -I"C:/Program Files (x86)/cgns/include"
 FORCE_INCLUDE +=
 ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
 ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-LIBS +=
+LIBS += -lcgns
 LDDEPS +=
 LINKCMD = $(CXX) -o "$@" $(OBJECTS) $(RESOURCES) $(ALL_LDFLAGS) $(LIBS)
 define PREBUILDCMDS
@@ -40,7 +40,7 @@ OBJDIR = build/Debug-windows-x86_64/ludwig
 DEFINES += -DPLATFORM_WINDOWS -DDEBUG
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -g -std=c++20
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
+ALL_LDFLAGS += $(LDFLAGS) -L"C:/Program Files (x86)/cgns/lib" -L/usr/lib64 -m64
 
 else ifeq ($(config),release)
 TARGETDIR = bin/Release-windows-x86_64/ludwig
@@ -49,7 +49,7 @@ OBJDIR = build/Release-windows-x86_64/ludwig
 DEFINES += -DPLATFORM_WINDOWS -DRELEASE
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -g
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -g -std=c++20
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64
+ALL_LDFLAGS += $(LDFLAGS) -L"C:/Program Files (x86)/cgns/lib" -L/usr/lib64 -m64
 
 else ifeq ($(config),dist)
 TARGETDIR = bin/Dist-windows-x86_64/ludwig
@@ -58,7 +58,7 @@ OBJDIR = build/Dist-windows-x86_64/ludwig
 DEFINES += -DPLATFORM_WINDOWS -DDIST
 ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -m64 -O2
 ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CPPFLAGS) -m64 -O2 -std=c++20
-ALL_LDFLAGS += $(LDFLAGS) -L/usr/lib64 -m64 -s
+ALL_LDFLAGS += $(LDFLAGS) -L"C:/Program Files (x86)/cgns/lib" -L/usr/lib64 -m64 -s
 
 endif
 

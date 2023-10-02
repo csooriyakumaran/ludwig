@@ -4,6 +4,18 @@ workspace "ludwig"
     startproject "ludwig"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}" 
+CGNS_SDK = os.getenv("CGNS_SDK")
+
+IncludeDir = {}
+IncludeDir["CGNS"] = "%{CGNS_SDK}/include"
+
+LibraryDir = {}
+LibraryDir["CGNS"] = "%{CGNS_SDK}/lib"
+
+Library = {}
+Library["CGNS"] = "%{LibraryDir.CGNS}/cgns"
+
+print(CGNS_SDK)
 
 project "ludwig" 
     kind "ConsoleApp" 
@@ -15,8 +27,13 @@ project "ludwig"
 
     files { "src/**.h", "src/**.cpp" }
 
-    includedirs { "src" }
-    links { }
+    includedirs {
+        "src",
+        "%{IncludeDir.CGNS}",
+    }
+    links {
+        "%{Library.CGNS}",
+    }
 
     filter "system:windows" 
         systemversion "latest" 

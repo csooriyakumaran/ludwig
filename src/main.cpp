@@ -11,7 +11,10 @@
 
 #ifdef DEBUG
     #include "tests/test-matrix.h"
+    #include "tests/test-arrays.h"
 #endif
+
+#include "cgnslib.h"
 
 namespace ludwig
 {
@@ -26,11 +29,11 @@ namespace ludwig
 
         f64 xmin = 0.005*plate_length;
         f64 xmax = 0.13*plate_length;
-        uint32_t imax = 10;
+        uint32_t imax = 1000;
 
         f64 ymin = 0.0l;
         f64 ymax = 0.02*plate_length;
-        uint32_t jmax = 10;
+        uint32_t jmax = 100;
         
         f64 deltax = ( xmax - xmin ) / ( imax - 1 );
         f64 deltay = ( ymax - ymin ) / ( jmax - 1 );
@@ -39,14 +42,9 @@ namespace ludwig
         std::vector<f64> x = linspace(xmin, xmax, imax);
         std::vector<f64> y = linspace(ymin, ymax, jmax);     
   
-        for (auto el : y)
-            std::cout << el << "\n";
-
         std::vector<f64> dx(imax-1, deltax);
         std::vector<f64> dy(jmax-1, deltay);
     
-        std::cout << ymax <<std::endl;
-
         Matrix<f64> u(imax, jmax, 0.0l);
         Matrix<f64> v(imax, jmax, 0.0l);
         
@@ -74,18 +72,18 @@ namespace ludwig
         for (u32 j = 1; j < jmax; j++)
              v(0, j) = v(0,j-1) - dy[j-1]*((u(0,j)/Ue[0])*(Ue[1] - Ue[0])/deltax - y[j]/del1[0]*(del1[1]-del1[0])/deltax*(u(0,j) - u(0,j-1) )/dy[j-1]);
 
-        for (u32 i = 0; i < imax; i++)
-        {
-            for (u32 j = 0; j < jmax; j++)
-                std::cout << std::setw(10) << v(i,j) << '\t';
-            std::cout << "\n";
-        }
+        // for (u32 i = 0; i < imax; i++)
+        // {
+        //     for (u32 j = 0; j < jmax; j++)
+        //         std::cout << std::setw(10) << v(i,j) << '\t';
+        //     std::cout << "\n";
+        // }
 
         for (uint32_t i = 0; i < imax-1; i++)
         {
             Matrix<f64> A(jmax-2, jmax-2);
-            Matrix<f64> b(jmax-2, 1);
-            Matrix<f64> c(jmax-2, 1);
+            Vector<f64> b(jmax-2);
+            Vector<f64> c(jmax-2);
 
             u32 k = 0;
             for (u32 j = 1; j < jmax-1; j++)
@@ -119,28 +117,18 @@ namespace ludwig
                 v(i+1, j+1) = v(i+1, j) - deltay / (2.0l*deltax) * ( u(i+1, j+1) - u(i+1, j+1) + u(i+1, j) - u(i, j) );
             }
 
-            for (uint32_t i = 0; i < jmax-2; i++)
-            {
-                for (uint32_t j = 0; j < jmax-2; j++)
-                    std::cout << std::setprecision(8) << A(i,j) << "\t";
-
-                std::cout << std::endl;
-            }
         }
         
+        // for (uint32_t i = 0; i < imax; i++)
+        // {
+        //     for (uint32_t j = 0; j < jmax; j++)
+        //         std::cout << std::setprecision(8) << u(i,j) << "\t";
+
+        //     std::cout << std::endl;
+        // }
 
     }
 
-    void test_arrays()
-    {
-        std::cout << "========= Array ===========\n"; 
-        u32* shape = new u32[2];
-        shape[0] = 2;
-        shape[1] = 2;
-        Array<f64, 2> A(shape);
-        for (int i = 0; i < A.size; i++)
-            std::cout << A.data[i] << std::endl;
-    }
 }
 
 template<typename T>
@@ -158,12 +146,14 @@ int main(int argc, char** argv)
 {
 
     // auto dur = timeit<std::chrono::nanoseconds>(1, []() { ludwig::Matrix<ludwig::f64>  A(100000, 10000, 1.23455); ludwig::f64 B = A[1000]; });
-    // std::cout << dur << "\n";
 
 #ifdef DEBUG
     ludwig::test_matrix_all();
+    ludwig::test_array_all();
 #endif
-    ludwig::run();
+    auto dur = timeit<std::chrono::microseconds>(100, []() { ludwig::run(); });
+    std::cout << dur << "\n";
+    // ludwig::run();
     return 0;
 }
 

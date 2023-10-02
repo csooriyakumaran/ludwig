@@ -13,15 +13,6 @@ namespace ludwig
         f64 y;
     };
 
-    struct FlowField
-    {
-        std::vector<Vertex> vertices;
-        std::vector<f64>    u;
-        std::vector<f64>    v;
-        std::vector<f64>    p;
-        std::vector<f64>    rho; // density
-        std::vector<f64>    mu;
-    };
 
     // this doesnt work yet
     static std::vector<f64> inflation_layer(f64 H, uint32_t N, f64 g)
@@ -38,3 +29,10 @@ namespace ludwig
     }
 }
 
+
+
+ // void MOC2::optimize::gradient_descent(std::vector<f64> inputs, NozzleGeometry& geom, std::function<f64(std::vector<f64>) cost_func)
+// {
+//      f64 cost = 0.0;
+//      for (u32 i = 0; i < MAX_IT; i++)
+//          
