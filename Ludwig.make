@@ -72,7 +72,9 @@ endif
 GENERATED :=
 OBJECTS :=
 
+GENERATED += $(OBJDIR)/cgns.o
 GENERATED += $(OBJDIR)/main.o
+OBJECTS += $(OBJDIR)/cgns.o
 OBJECTS += $(OBJDIR)/main.o
 
 # Rules
@@ -137,6 +139,9 @@ endif
 # File Rules
 # #############################################
 
+$(OBJDIR)/cgns.o: src/ludwig/io/cgns.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: src/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"

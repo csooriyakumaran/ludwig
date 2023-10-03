@@ -62,5 +62,12 @@ namespace ludwig
         Vec2<f64> v2 = {4.2,5.3};
         Vec2<f64> v3 = v1 + v2;
         std::cout << v3.x << " " << v3.y << std::endl;
+        Vec3<f64> vec1 = {1.0, 2.0, 3.0};
+        Vec3<f64> vec2 = {4.0, 5.0, 6.0};
+        f64 dotResult = dot(vec1, vec2);
+        Vec3<f64> crossResult = cross(vec1, vec2);
+        std::cout << "Cross Product: (" << crossResult.x << ", " << crossResult.y << ", " << crossResult.z << ")" << std::endl;
+        std::cout << "Dot Product: " << dotResult << std::endl;
+     
     }
 }

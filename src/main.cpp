@@ -22,6 +22,7 @@ namespace ludwig
     void run()
     {
 
+        // geom --> move to a geometry structure
         f64 plate_length = 0.2l;
         f64 U0 = 1.0l;
         f64 density = 1.182l;
@@ -35,6 +36,7 @@ namespace ludwig
         f64 ymax = 0.02*plate_length;
         uint32_t jmax = 100;
         
+        // grid -> move to a mesh structure ... how to handle boundary conditions? Generally or specific for this case?
         f64 deltax = ( xmax - xmin ) / ( imax - 1 );
         f64 deltay = ( ymax - ymin ) / ( jmax - 1 );
  

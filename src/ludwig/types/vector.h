@@ -1,45 +1,64 @@
 #pragma once
 
+#include <cmath>
 #include "primitive.h"
 
 namespace ludwig
 {
-    // =========================== VECTORS =================================
-    // - these are mathematical vectros with n singl-element components
-    template<typename T>
-    struct Vec2
-    {
-        T x;
-        T y;
-    };
+    // =========================== VECTORS ====================================
+    // - these are mathematical vectors with n singl-element components
 
-    template<typename T>
-    struct Vec3
-    {
-        T x;
-        T y;
-        T z;
-    };
+    // ===========================   Vec2   ===================================
+    template<typename T> struct Vec2 { T x; T y; };
 
-    template<typename T>
-    struct Vec4
-    {
-        T x;
-        T y;
-        T z;
-        T t;
-    };
+    template<typename T> Vec2<T> operator+ (const Vec2<T>& lhs, const Vec2<T>& rhs) { return {lhs.x + rhs.x, lhs.y + rhs.y}; }
 
-    template<typename T>
-    Vec2<T> operator+ (const Vec2<T>& lhs, const Vec2<T>& rhs)
-    {
-        Vec2<T> res = {lhs.x + rhs.x, lhs.y + rhs.y};
-        return res;
-    }
+    template<typename T> Vec2<T> operator- (const Vec2<T>& lhs, const Vec2<T>& rhs) { return {lhs.x - rhs.x, lhs.y - rhs.y}; }
 
-    // forward declaration
-    template<typename T> 
-    struct Matrix;
+    template<typename T> Vec2<T> operator* (const Vec2<T>& lhs, const T& rhs) { return {lhs.x * rhs, lhs.y * rhs}; }
+
+    template<typename T> Vec2<T> operator* (const T& lhs, const Vec2<T>& rhs) { return {lhs * rhs.x, lhs * rhs.y}; }
+
+    template<typename T> T magnitude(const Vec2<T>& v) { return std::sqrt(v.x * v.x + v.y * v.y); }
+
+    template<typename T> T dot(const Vec2<T>& lhs, const Vec2<T>& rhs) { return lhs.x * rhs.x + lhs.y * rhs.y; }
+
+    // ===========================   Vec3   ===================================
+    template<typename T> struct Vec3 { T x; T y; T z; };
+
+    template<typename T> Vec3<T> operator+ (const Vec3<T>& lhs, const Vec3<T>& rhs) { return {lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z}; }
+
+    template<typename T> Vec3<T> operator- (const Vec3<T>& lhs, const Vec3<T>& rhs) { return {lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z}; }
+
+    template<typename T> Vec3<T> operator* (const Vec3<T>& lhs, const T& rhs) { return {lhs.x * rhs, lhs.y * rhs, lhs.z * rhs}; }
+
+    template<typename T> Vec3<T> operator* (const T& lhs, const Vec3<T>& rhs) { return {lhs * rhs.x, lhs * rhs.y, lhs * rhs.z}; }
+
+    template<typename T> T magnitude(const Vec3<T>& v) { return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z); }
+
+    template<typename T> T dot(const Vec3<T>& lhs, const Vec3<T>& rhs) { return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z; }
+
+    template<typename T> Vec3<T> cross(const Vec3<T>& lhs, const Vec3<T>& rhs) { return  {lhs.y * rhs.z - lhs.z * rhs.y, lhs.z * rhs.x - lhs.x * rhs.z, lhs.x * rhs.y - lhs.y * rhs.x}; }
+
+    // ===========================   Vec4   ===================================
+    template<typename T> struct Vec4 { T x; T y; T z; T t; };
+
+    template<typename T> Vec4<T> operator+ (const Vec4<T>& lhs, const Vec4<T>& rhs) { return {lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.t + rhs.t}; }
+
+    template<typename T> Vec4<T> operator- (const Vec4<T>& lhs, const Vec3<T>& rhs) { return {lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.t - rhs.t}; }
+
+    template<typename T> Vec4<T> operator* (const Vec4<T>& lhs, const T& rhs) { return {lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.t * rhs}; }
+
+    template<typename T> Vec4<T> operator* (const T& lhs, const Vec4<T>& rhs) { return {lhs * rhs.x, lhs * rhs.y, lhs * rhs.z, lhs * rhs.t}; }
+
+    template<typename T> T magnitude(const Vec4<T>& v) { return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.t * v.t); }
+
+    template<typename T> T dot(const Vec4<T>& lhs, const Vec3<T>& rhs) { return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.t * rhs.t; }
+    // ========================================================================
+
+    // ========================= N-DIMENSIONAL VECTORS ======================== 
+    // forward declaration 
+    template<typename T> struct Matrix;
 
     template<typename T>
     struct Vector
@@ -84,7 +103,6 @@ namespace ludwig
         static Vector<T>& cross(const Vector<T>& lhs, const Vector<T>& rhs); // only if n = 3;
         
         const T& magnitude();
-        
     };
 
     // ====================================================================== //
