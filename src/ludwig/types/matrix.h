@@ -178,10 +178,6 @@ namespace ludwig
     template<typename T>
     Matrix<T>& Matrix<T>::operator= (Matrix<T>&& rhs) noexcept
     {
-        std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-        std::cout << "                   MOVED                          \n";
-        std::cout << "++++++++++++++++++++++++++++++++++++++++++++++++++\n";
-
         if ( this != &rhs )
         {
             if ( data != nullptr )

@@ -3,7 +3,7 @@
 #include <iomanip>
 #include "ludwig/types/types.h"
 
-namespace ludwig
+namespace ludwig::test
 {
     static void print_matrix(Matrix<f64>& m)
     {
@@ -240,7 +240,7 @@ namespace ludwig
         std::cout << " |A| = " << d << std::endl;
     }
 
-    static void test_matrix_all()
+    static void test_matrix()
     {
         test_matrix_construction();
         test_matrix_arithmatic();

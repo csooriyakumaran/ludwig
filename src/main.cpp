@@ -11,6 +11,7 @@
 
 #ifdef DEBUG
     #include "tests/test-matrix.h"
+    #include "tests/test-vector.h"
     #include "tests/test-arrays.h"
 #endif
 
@@ -150,8 +151,9 @@ int main(int argc, char** argv)
     // auto dur = timeit<std::chrono::nanoseconds>(1, []() { ludwig::Matrix<ludwig::f64>  A(100000, 10000, 1.23455); ludwig::f64 B = A[1000]; });
 
 #ifdef DEBUG
-    ludwig::test_matrix_all();
-    ludwig::test_array_all();
+    ludwig::test::test_matrix();
+    ludwig::test::test_arrays();
+    ludwig::test::test_vector();
 #endif
     auto dur = timeit<std::chrono::microseconds>(100, []() { ludwig::run(); });
     std::cout << dur << "\n";

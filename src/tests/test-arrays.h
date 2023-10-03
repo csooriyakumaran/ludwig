@@ -6,7 +6,7 @@
 #include "ludwig/types/types.h"
 
 
-namespace ludwig
+namespace ludwig::test
 {
 
     static void print_array_zy(Array3<f64>& A, u32 i)
@@ -44,7 +44,7 @@ namespace ludwig
 
     }
 
-    static void test_array_all()
+    static void test_arrays()
     {
         f64 data[24];
         for (int i = 0; i < 24; i++)
@@ -53,21 +53,5 @@ namespace ludwig
         print_array(A, "A     ");
         Array3<f64> B = A.slice(0, A.ni, 0, A.nj, 0, 1);
         print_array(B, "B = A.slice()");
-        u32 dims[3] = {4,3,2};
-        Vector<u32> vdims({1,2,3});
-        for (u64 i = 0; i < vdims.size; i++)
-            std::cout << "vdims[" << i <<"] = " << vdims[i] << "\n";
-        
-        Vec2<f64> v1 = {1.2,2.3};
-        Vec2<f64> v2 = {4.2,5.3};
-        Vec2<f64> v3 = v1 + v2;
-        std::cout << v3.x << " " << v3.y << std::endl;
-        Vec3<f64> vec1 = {1.0, 2.0, 3.0};
-        Vec3<f64> vec2 = {4.0, 5.0, 6.0};
-        f64 dotResult = dot(vec1, vec2);
-        Vec3<f64> crossResult = cross(vec1, vec2);
-        std::cout << "Cross Product: (" << crossResult.x << ", " << crossResult.y << ", " << crossResult.z << ")" << std::endl;
-        std::cout << "Dot Product: " << dotResult << std::endl;
-     
     }
 }

@@ -4,15 +4,15 @@
 
 namespace ludwig
 {
-    struct FlowField
+    struct FlowField2D
     {
-        Array3<Vec3<f64>> position;
-        Array3<Vec3<f64>> velocity;
-        Array3<Vec3<f64>> stress_x;
-        Array3<Vec3<f64>> stress_y;
-        Array3<Vec3<f64>> stress_z;
-        Array3<f64>       pressure;
-        Array3<f64>       density;
-        Array3<f64>       viscosity;
+        Array2<Vec2<f64>> position;
+        Array2<Vec2<f64>> velocity;
+        Array2<Vec2<f64>> stress_x;
+        Array2<Vec2<f64>> stress_y;
+        Array2<Vec2<f64>> stress_z;
+        Array2<f64>       pressure;
+        Array2<f64>       density;
+        Array2<f64>       viscosity;
     };
 }
