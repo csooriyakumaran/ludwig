@@ -6,6 +6,7 @@
 #include "ludwig/core/assert.h"
 #include "ludwig/types/types.h"
 #include "ludwig/core/linspace.h"
+#include "ludwig/mesh/geometry.h"
 #include "ludwig/mesh/uniform-grid.h"
 #include "ludwig/solver/tdma.h"
 
@@ -22,24 +23,28 @@ namespace ludwig
 
     void run()
     {
+        f64 density = 1.182l;
+        f64 viscosity = 1.83e-5;
+        f64 U0 = 1.0l;
+
 
         // geom --> move to a geometry structure
         f64 plate_length = 0.2l;
-        f64 U0 = 1.0l;
-        f64 density = 1.182l;
-        f64 viscosity = 1.83e-5;
-
         f64 xmin = 0.005*plate_length;
         f64 xmax = 0.13*plate_length;
-        uint32_t imax = 1000;
 
         f64 ymin = 0.0l;
         f64 ymax = 0.02*plate_length;
-        uint32_t jmax = 100;
+        
+        // geom  = { {xmin, ymin), (xmax, ymin), (xmax, ymax), (xmin, ymax) }
         
         // grid -> move to a mesh structure ... how to handle boundary conditions? Generally or specific for this case?
+        // mesh = HexMesh(geom, inflation_rate, ni, nj, nk=1) 
+        uint32_t imax = 1000;
+        uint32_t jmax = 100;
         f64 deltax = ( xmax - xmin ) / ( imax - 1 );
         f64 deltay = ( ymax - ymin ) / ( jmax - 1 );
+
  
         // for now just assume uniform grid
         std::vector<f64> x = linspace(xmin, xmax, imax);
@@ -47,7 +52,8 @@ namespace ludwig
   
         std::vector<f64> dx(imax-1, deltax);
         std::vector<f64> dy(jmax-1, deltay);
-    
+        
+        // flowfield(mesh)
         Matrix<f64> u(imax, jmax, 0.0l);
         Matrix<f64> v(imax, jmax, 0.0l);
         
@@ -82,6 +88,7 @@ namespace ludwig
         //     std::cout << "\n";
         // }
 
+        // Flowfield.solve( solverfn-> Crank_Nicolson)
         for (uint32_t i = 0; i < imax-1; i++)
         {
             Matrix<f64> A(jmax-2, jmax-2);
@@ -147,7 +154,6 @@ auto timeit(size_t iterations, std::function<void()> func)
 
 int main(int argc, char** argv)
 {
-
     // auto dur = timeit<std::chrono::nanoseconds>(1, []() { ludwig::Matrix<ludwig::f64>  A(100000, 10000, 1.23455); ludwig::f64 B = A[1000]; });
 
 #ifdef DEBUG
@@ -157,7 +163,6 @@ int main(int argc, char** argv)
 #endif
     auto dur = timeit<std::chrono::microseconds>(100, []() { ludwig::run(); });
     std::cout << dur << "\n";
-    // ludwig::run();
     return 0;
 }
 

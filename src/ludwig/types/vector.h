@@ -29,6 +29,8 @@ namespace ludwig
 
     template<typename T> T vectorAngle(const Vec2<T>& lhs, const Vec2<T>& rhs) { return (vectorMagnitude(lhs) == 0 || vectorMagnitude(rhs) == 0) ? static_cast<T>(0.0) : std::acos(vectorDotProduct(lhs, rhs) / (vectorMagnitude(lhs) *  vectorMagnitude(rhs)) ); }
 
+    template<typename T> Vec2<T> normalizeVector(const Vec2<T>& lhs) { T mag = vectorMagnitude(lhs); return ( mag == 0) ? Vec2<T>( static_cast<T>(0.0), static_cast<T>(0.0) ) : Vec2<T>( lhs.x / mag, lhs.y / mag ); } 
+
     template<typename T> std::ostream& operator<< (std::ostream& os, const Vec2<T>& v) { return os << "(" << v.x << ", " << v.y <<")"; }
 
 // ===========================  Vec3   ========================================
@@ -52,6 +54,8 @@ namespace ludwig
 
     template<typename T> T vectorAngle(const Vec3<T>& lhs, const Vec3<T>& rhs) { return (vectorMagnitude(lhs) == 0 || vectorMagnitude(rhs) == 0) ? static_cast<T>(0.0) : std::acos(vectorDotProduct(lhs, rhs) / (vectorMagnitude(lhs) *  vectorMagnitude(rhs)) ); }
 
+    template<typename T> Vec3<T> normalizeVector(const Vec3<T>& lhs) { T mag = vectorMagnitude(lhs); return ( mag == 0) ? Vec3<T>( static_cast<T>(0.0), static_cast<T>(0.0), static_cast<T>(0.0) ) : Vec3<T>( lhs.x / mag, lhs.y / mag, lhs.z / mag ); } 
+
     template<typename T> std::ostream& operator<< (std::ostream& os, const Vec3<T>& v) { return os << "(" << v.x << ", " << v.y << ", " << v.z << ")"; }
 
 // ===========================  Vec4   ========================================
@@ -72,6 +76,8 @@ namespace ludwig
     template<typename T> T vectorDotProduct(const Vec4<T>& lhs, const Vec4<T>& rhs) { return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.t * rhs.t; }
 
     template<typename T> T vectorAngle(const Vec4<T>& lhs, const Vec4<T>& rhs) { return (vectorMagnitude(lhs) == 0 || vectorMagnitude(rhs) == 0) ? static_cast<T>(0.0) : std::acos(vectorDotProduct(lhs, rhs) / (vectorMagnitude(lhs) *  vectorMagnitude(rhs)) ); }
+
+    template<typename T> Vec4<T> normalizeVector(const Vec4<T>& lhs) { T mag = vectorMagnitude(lhs); return ( mag == 0) ? Vec4<T>( static_cast<T>(0.0), static_cast<T>(0.0), static_cast<T>(0.0), static_cast<T>(0.0) ) : Vec4<T>( lhs.x / mag, lhs.y / mag, lhs.z / mag, lhs.t / mag ); } 
 
     template<typename T> std::ostream& operator<< (std::ostream& os, const Vec4<T>& v) { return os << "(" << v.x << ", " << v.y << ", " << v.z <<  ", " << v.t << ")"; }
 

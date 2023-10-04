@@ -4,15 +4,18 @@
 
 namespace ludwig
 {
+    typedef Array<f64>       ScalarField;
+    typedef Array<Vec3<f64>> VectorField;
+    
     struct FlowField2D
     {
-        Array2<Vec2<f64>> position;
-        Array2<Vec2<f64>> velocity;
-        Array2<Vec2<f64>> stress_x;
-        Array2<Vec2<f64>> stress_y;
-        Array2<Vec2<f64>> stress_z;
-        Array2<f64>       pressure;
-        Array2<f64>       density;
-        Array2<f64>       viscosity;
+        VectorField position; // position[i].x
+        VectorField velocity;
+        VectorField stress_x;
+        VectorField stress_y;
+        VectorField stress_z;
+        ScalarField pressure; // pressure[i]
+        ScalarField density;
+        ScalarField viscosity;
     };
 }

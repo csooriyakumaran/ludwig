@@ -7,11 +7,6 @@
 
 namespace ludwig
 {
-    struct Vertex
-    {
-        f64 x;
-        f64 y;
-    };
 
 
     // this doesnt work yet
