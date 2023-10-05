@@ -45,11 +45,10 @@ namespace ludwig
         f64 deltax = ( xmax - xmin ) / ( imax - 1 );
         f64 deltay = ( ymax - ymin ) / ( jmax - 1 );
 
- 
         // for now just assume uniform grid
         std::vector<f64> x = linspace(xmin, xmax, imax);
         std::vector<f64> y = linspace(ymin, ymax, jmax);     
-  
+
         std::vector<f64> dx(imax-1, deltax);
         std::vector<f64> dy(jmax-1, deltay);
         
@@ -128,7 +127,7 @@ namespace ludwig
             }
 
         }
-        
+
         // for (uint32_t i = 0; i < imax; i++)
         // {
         //     for (uint32_t j = 0; j < jmax; j++)

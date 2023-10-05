@@ -5,17 +5,16 @@
 namespace ludwig
 {
     typedef Array<f64>       ScalarField;
-    typedef Array<Vec3<f64>> VectorField;
+    typedef Array<Vec2<f64>> VectorField;
     
-    struct FlowField2D
+    struct FlowField
     {
-        VectorField position; // position[i].x
-        VectorField velocity;
-        VectorField stress_x;
-        VectorField stress_y;
-        VectorField stress_z;
-        ScalarField pressure; // pressure[i]
+        VectorField position; // position(i,j).x
+        VectorField velocity; // u = velocity(i,j).x, v = velocity(i,j).y
+        ScalarField pressure; // pressure(i,j)
         ScalarField density;
         ScalarField viscosity;
     };
+
+   // FlowField make_flow_field(Mesh& mesh, 
 }
