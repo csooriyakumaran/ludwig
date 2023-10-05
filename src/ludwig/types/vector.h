@@ -95,9 +95,9 @@ namespace ludwig
         u64 size;
     
         Vector();
-        Vector(u64 s);
-        Vector(u64 s, const T init);
-        Vector(u64 s, const T* init);
+        explicit Vector(u64 s);
+        explicit Vector(u64 s, const T init);
+        explicit Vector(u64 s, const T* init);
         Vector(std::initializer_list<T> init);
         Vector(const Vector<T>& rhs);
         Vector(Vector<T>&& rhs) noexcept;

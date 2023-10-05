@@ -9,7 +9,7 @@
 #include "ludwig/mesh/geometry.h"
 #include "ludwig/mesh/uniform-grid.h"
 #include "ludwig/solver/tdma.h"
-
+#include "ludwig/flow/flowfield.h"
 #ifdef DEBUG
     #include "tests/test-matrix.h"
     #include "tests/test-vector.h"
@@ -153,6 +153,10 @@ auto timeit(size_t iterations, std::function<void()> func)
 
 int main(int argc, char** argv)
 {
+    ludwig::VectorField f(4,2,3);
+    for (uint64_t i = 0; i < f.size; i++)
+        std::cout << f[i] << "\n"; 
+    return 0;
     // auto dur = timeit<std::chrono::nanoseconds>(1, []() { ludwig::Matrix<ludwig::f64>  A(100000, 10000, 1.23455); ludwig::f64 B = A[1000]; });
 
 #ifdef DEBUG

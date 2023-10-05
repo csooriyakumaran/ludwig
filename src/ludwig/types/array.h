@@ -21,15 +21,27 @@ namespace ludwig
         Array(const Vec4<u32>&);
         Array(const std::initializer_list<u32>&);
         Array(const u32 x = 1, const u32 y = 1, const u32 z = 1, const u32 t = 1);
-
-        void initialize(const T&);
-        void initialize(const Vector<T>&);
+        Array(const Array<T>&);
+        Array(Array<T>&&) noexcept;
+        
+        ~Array(); 
 
         T& operator[] (const u32);
         T& operator() (const u32 i = 0, const u32 j = 0, const u32 k = 0, const u32 t = 0) noexcept;
         const T& operator[] (const u32) const;
         const T& operator() (const u32 i = 0, const u32 j = 0, const u32 k = 0, const u32 t = 0) const noexcept;
+
+        Array<T>& operator= (const Array<T>&);
+        Array<T>& operator= (Array<T>&&) noexcept;
+
+        void initialize(const T&);
+        void emplace_x(const Vector<T>&, const u32, const u32, const u32);
+        void emplace_y(const Vector<T>&, const u32, const u32, const u32);
+        void emplace_z(const Vector<T>&, const u32, const u32, const u32);
+        void emplace_t(const Vector<T>&, const u32, const u32, const u32);
+
     };
+
     template<typename T>
     Array<T>::Array() : dims({1,1,1,1}), size(1)
     {
@@ -99,18 +111,23 @@ namespace ludwig
     }
 
     template<typename T>
-    void Array<T>::initialize(const T& init)
+    Array<T>::Array(const Array<T>& rhs) : dims(rhs.dims), size(rhs.size)
     {
-        for (u64 i = 0; i < size; i++)
-            data[i] = init; 
+        data = new T[size];
+        std::copy(rhs.data, rhs.data + size, data);
     }
 
     template<typename T>
-    void Array<T>::initialize(const Vector<T>& v)
+    Array<T>::Array(Array<T>&& rhs) noexcept : dims({0,0,0,0}), size(0), data(nullptr)
     {
-        ASSERT( (v.size == size), "Cannot initialize Array of length %d with a Vector of length %d\n", size, v.size);
-        for (u64 i = 0; i < size; i++)
-            data[i] = v[i]; 
+        *this = std::move(rhs);
+    }
+
+    template<typename T>
+    Array<T>::~Array()
+    {
+        if (data != nullptr)
+            delete[] data;
     }
 
     template<typename T>
@@ -147,8 +164,92 @@ namespace ludwig
         return data[i + j * dims.x + k * dims.x * dims.y + t * dims.x*dims.y*dims.z];
     }
 
+    template<typename T>
+    Array<T>& Array<T>::operator= (const Array<T>& rhs)
+    {
+        if ( this != &rhs )
+        {
+            if ( data != nullptr )
+                delete[] data;
+            
+            dims = rhs.dims;
+            size = rhs.size;
+            data = new T[size];
+            std::copy(rhs.data, rhs.data + size, data);
+        }
+        return *this;
+    }
+
+    template<typename T>
+    Array<T>& Array<T>::operator= (Array<T>&& rhs) noexcept
+    {
+        if ( this != &rhs )
+        {
+            if ( data != nullptr )
+                delete[] data;
+            
+            dims = rhs.dims;
+            size = rhs.size;
+            data = rhs.data; 
+            
+            rhs.dims = {0,0,0,0};
+            rhs.size = 0;
+            rhs.data = nullptr;
+        }
+        return *this;
+    }
+
+    template<typename T>
+    void Array<T>::initialize(const T& init)
+    {
+        for (u64 i = 0; i < size; i++)
+            data[i] = init; 
+    }
+
+    template<typename T>
+    void Array<T>::emplace_x(const Vector<T>& v, const u32 j, const u32 k, const u32 t)
+    {
+        ASSERT( (v.size == dims.x), "Dimensions do not matach, cannot emplace data in x-direction\n");
+        u32 stride = 1;
+        u32 offset = j*dims.x + k*dims.x*dims.y + t*dims.x*dims.y*dims.z;
+
+        for (u32 i = 0; i < v.size; i++)
+            data[i*stride + offset] = v[i];
+    }
+
+    template<typename T>
+    void Array<T>::emplace_y(const Vector<T>& v, const u32 i, const u32 k, const u32 t)
+    {
+        ASSERT( (v.size == dims.y), "Dimensions do not matach, cannot emplace data in j-direction\n");
+        u32 stride = dims.x;
+        u32 offset = i + k*dims.x*dims.y + t*dims.x*dims.y*dims.z;
+
+        for (u32 j = 0; j < v.size; j++)
+            data[j*stride + offset] = v[j];
+    }
+
+    template<typename T>
+    void Array<T>::emplace_z(const Vector<T>& v, const u32 i, const u32 j, const u32 t)
+    {
+        ASSERT( (v.size == dims.z), "Dimensions do not matach, cannot emplace data in z-direction\n");
+        u32 stride = dims.x*dims.y;
+        u32 offset = i + j*dims.x + t*dims.x*dims.y*dims.z;
+
+        for (u32 k = 0; k < v.size; k++)
+            data[k*stride + offset] = v[k];
+    }
 
 
+    template<typename T>
+    void Array<T>::emplace_t(const Vector<T>& v, const u32 i, const u32 j, const u32 k)
+    {
+        ASSERT( (v.size == dims.t), "Dimensions do not matach, cannot emplace data in t-direction\n");
+        u32 stride = dims.x*dims.y*dims.z;
+        u32 offset = i + j*dims.x + k*dims.x*dims.y;
+
+        for (u32 t = 0; t < v.size; t++)
+            data[t*stride + offset] = v[t];
+    }
 
 
 

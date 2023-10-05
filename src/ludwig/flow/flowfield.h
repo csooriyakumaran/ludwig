@@ -2,7 +2,7 @@
 
 #include "../types/types.h"
 
-namespace ludwig
+namespace ludwig 
 {
     typedef Array<f64>       ScalarField;
     typedef Array<Vec2<f64>> VectorField;
