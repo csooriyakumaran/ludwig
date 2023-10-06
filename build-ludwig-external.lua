@@ -1,46 +1,24 @@
-workspace "ludwig"
-    architecture "x64" 
-    configurations {"Debug", "Release", "Dist"} 
-    startproject "ludwig"
-
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}" 
-
-IncludeDirs = {}
-IncludeDirs["vk"]      = "libs/vk/include"
--- external
--- includedir["cgns"] = "%{cgns_sdk}/include"
-
-LibraryDirs = {}
-LibraryDirs["vk"]      = "libs/vk/bin/" .. outputdir .. "/vk"
--- external
--- LibraryDirs["cgns"]    = "%{cgns_sdk}/lib"
-
-Library = {}
-Library["vk"]          = "%{LibraryDirs.vk}/vk" 
-
-group "Core"
-    include "libs/vk/build-vk.lua"
-group ""
 
 project "ludwig" 
     kind "StaticLib" 
     language "C++" 
     cppdialect "C++20" 
     staticruntime "off"
+
     targetdir ("bin/" .. outputdir .. "/%{prj.name}")
     objdir ("build/" .. outputdir .. "/%{prj.name}")
+
+    pchheader "src/lwpch.h"
+    pchsource "src/lwpch.cpp"
 
     files { "src/**.h", "src/**.cpp" }
 
     includedirs {
+        "src",
         "%{IncludeDirs.vk}",
     }
     links {
         "%{Library.vk}",
-    }
-
-    defines {
-
     }
 
     filter "system:windows" 

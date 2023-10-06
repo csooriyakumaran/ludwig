@@ -3,9 +3,7 @@
 #include <chrono>
 #include <functional>
 
-#include "ludwig/core/assert.h"
-#include "ludwig/types/types.h"
-#include "ludwig/core/linspace.h"
+#include "vk/vk.h"
 #include "ludwig/mesh/geometry.h"
 #include "ludwig/mesh/uniform-grid.h"
 #include "ludwig/solver/tdma.h"
@@ -151,7 +149,7 @@ auto timeit(size_t iterations, std::function<void()> func)
     return std::chrono::duration_cast<T>(stop - start) / iterations;
 }
 
-int main(int argc, char** argv)
+int dep_main(int argc, char** argv)
 {
     ludwig::VectorField f(4,2,3);
     for (uint64_t i = 0; i < f.size; i++)
