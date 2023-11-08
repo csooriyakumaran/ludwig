@@ -1,9 +1,10 @@
+#include "temp.h"
 #include <iostream>
 #include <iomanip>
 #include <chrono>
 #include <functional>
 
-#include "vk/vk.h"
+
 #include "ludwig/mesh/geometry.h"
 #include "ludwig/mesh/uniform-grid.h"
 #include "ludwig/solver/tdma.h"
@@ -21,38 +22,39 @@ namespace ludwig
 
     void run()
     {
-        f64 density = 1.182l;
+        std::cout << "TEST\n";
+        f64 density = 1.182;
         f64 viscosity = 1.83e-5;
-        f64 U0 = 1.0l;
+        f64 U0 = 1.0;
 
 
         // geom --> move to a geometry structure
-        f64 plate_length = 0.2l;
+        f64 plate_length = 0.2;
         f64 xmin = 0.005*plate_length;
         f64 xmax = 0.13*plate_length;
 
-        f64 ymin = 0.0l;
+        f64 ymin = 0.0;
         f64 ymax = 0.02*plate_length;
         
         // geom  = { {xmin, ymin), (xmax, ymin), (xmax, ymax), (xmin, ymax) }
         
         // grid -> move to a mesh structure ... how to handle boundary conditions? Generally or specific for this case?
         // mesh = HexMesh(geom, inflation_rate, ni, nj, nk=1) 
-        uint32_t imax = 1000;
+        uint32_t imax = 10;
         uint32_t jmax = 100;
         f64 deltax = ( xmax - xmin ) / ( imax - 1 );
         f64 deltay = ( ymax - ymin ) / ( jmax - 1 );
 
         // for now just assume uniform grid
-        std::vector<f64> x = linspace(xmin, xmax, imax);
-        std::vector<f64> y = linspace(ymin, ymax, jmax);     
+        Vector<f64> x = vk::linspace(xmin, xmax, imax);
+        Vector<f64> y = vk::linspace(ymin, ymax, jmax);     
 
         std::vector<f64> dx(imax-1, deltax);
         std::vector<f64> dy(jmax-1, deltay);
         
         // flowfield(mesh)
-        Matrix<f64> u(imax, jmax, 0.0l);
-        Matrix<f64> v(imax, jmax, 0.0l);
+        Matrix<f64> u(imax, jmax, 0.0);
+        Matrix<f64> v(imax, jmax, 0.0);
         
         std::vector<f64> Ue(imax);
         std::vector<f64> Re(imax);
@@ -78,12 +80,12 @@ namespace ludwig
         for (u32 j = 1; j < jmax; j++)
              v(0, j) = v(0,j-1) - dy[j-1]*((u(0,j)/Ue[0])*(Ue[1] - Ue[0])/deltax - y[j]/del1[0]*(del1[1]-del1[0])/deltax*(u(0,j) - u(0,j-1) )/dy[j-1]);
 
-        // for (u32 i = 0; i < imax; i++)
-        // {
-        //     for (u32 j = 0; j < jmax; j++)
-        //         std::cout << std::setw(10) << v(i,j) << '\t';
-        //     std::cout << "\n";
-        // }
+        for (u32 i = 0; i < imax; i++)
+        {
+            for (u32 j = 0; j < jmax; j++)
+                std::cout << std::setw(10) << v(i,j) << '\t';
+            std::cout << "\n";
+        }
 
         // Flowfield.solve( solverfn-> Crank_Nicolson)
         for (uint32_t i = 0; i < imax-1; i++)
@@ -134,6 +136,12 @@ namespace ludwig
         //     std::cout << std::endl;
         // }
 
+        for (u32 i = 0; i < imax; i++)
+        {
+            for (u32 j = 0; j < jmax; j++)
+                std::cout << std::setprecision(8) << u(i,j) << "\t";
+            std::cout << "\n";
+        }
     }
 
 }

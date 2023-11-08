@@ -1,11 +1,11 @@
 #pragma once
 
-#include "vk.h"
+#include "vk/vk.h"
 
 namespace ludwig 
 {
-    typedef Array<f64>       ScalarField;
-    typedef Array<Vec2<f64>> VectorField;
+    typedef Array<f64>  ScalarField;
+    typedef Array<Vec2> VectorField;
     
     struct FlowField
     {

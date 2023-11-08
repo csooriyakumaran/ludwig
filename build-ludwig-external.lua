@@ -15,10 +15,12 @@ project "ludwig"
 
     includedirs {
         "src",
-        "%{IncludeDirs.vk}",
+        "../../%{IncludeDirs.vk}",
+        "%{IncludeDirs.cgns}",
     }
     links {
-        "%{Library.vk}",
+        "../../%{Library.vk}",
+        "%{Library.cgns}",
     }
 
     filter "system:windows" 

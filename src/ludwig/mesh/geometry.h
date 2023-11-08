@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../types/types.h"
+#include "vk/vk.h"
 #include "uniform-grid.h"
 
 namespace ludwig
 {
 
-    struct Vertex : public Vec2<f64> // x, y, id
+    struct Vertex : public ::Vec2 // x, y, id
     {
         u64 id;
     };
@@ -14,12 +14,12 @@ namespace ludwig
     struct Edge
     {
         Vector<Vertex> vertices;
-        Vector<Vec2<f64>> norms;
+        Vector<Vec2> norms;
 
         Edge(Vector<Vertex>& v) : vertices(v)
         {
             for (u64 i = 0; i < v.size - 1; i++)
-                norms[i] = normalizeVector(Vec2<f64>( (v[i+1].y - v[i].y), -(v[i+1].x - v[i].x) ));
+                norms[i] = normalizeVector(Vec2( (v[i+1].y - v[i].y), -(v[i+1].x - v[i].x) ));
         }
         
         f64 len()
@@ -44,7 +44,7 @@ namespace ludwig
     };
     struct Boundary
     {
-        Vector<Vec3<f64>> vertexes;
+        Vector<Vec3> vertexes;
         
     };
     struct Geometry 
